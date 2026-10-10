@@ -9,6 +9,7 @@ class ChatState(TypedDict):
     draft: str
     review: str
     answer: str
+    retrieved_context: str
     retry_count: int
     history: list[dict]
     ollama_model: str

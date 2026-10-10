@@ -16,7 +16,8 @@ PLANNING_KEYWORDS = {
 railway_keywords = [
     "irctc", "train", "railway", "pnr", "tdr",
     "confirmed ticket", "ticket cancellation",
-    "cancellation charge", "refund", "departure",
+    "cancellation", "cancel", "cancellation charge",
+    "refund", "departure",
 ]
 
 

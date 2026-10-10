@@ -24,7 +24,8 @@ def research_node(state: dict) -> dict:
     if not query:
         raise ValueError("Research query cannot be empty.")
 
-    context = traced_retrieve_context(query)
+    retrieval_query = state.get("original_query") or query
+    context = traced_retrieve_context(retrieval_query)
 
     if context:
         rag_instructions = f"""
@@ -35,7 +36,8 @@ Rules:
 - Do not invent policy details or unsupported facts.
 - If the context does not contain enough information, clearly say so.
 - You may explain the retrieved information in simple language.
-- Source citations will be added in a later step.
+- Cite supporting statements using the matching [Source N] labels.
+- Do not cite sources that are not included in the retrieved context.
 
 Retrieved context:
 {context}
@@ -103,6 +105,7 @@ available documents. Do not invent document-specific facts.
     return {
         "draft": answer,
         "answer": answer,
+        "retrieved_context": context,
         "ollama_model": result["model"],
         "ollama_input_tokens": result["input_tokens"],
         "ollama_output_tokens": result["output_tokens"],

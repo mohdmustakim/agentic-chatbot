@@ -17,10 +17,16 @@ Review the generated answer against the original user query.
 
 Evaluate:
 1. Relevance to the original query.
-2. Factual correctness.
+2. Factual correctness against the provided retrieved source context, when present.
 3. Completeness.
 4. Clarity and formatting.
 5. Whether the answer follows the user's instructions.
+
+For research answers with retrieved source context:
+- Treat that context as the evidence for document-specific claims.
+- Do not introduce conflicting external or assumed "current" facts.
+- Do not request changes just because the context differs from outside knowledge.
+- Check that claims are supported by the context and citations refer to its source labels.
 
 Return exactly one of these formats:
 
@@ -48,6 +54,7 @@ def generate_reviewer_answer(payload: dict) -> dict:
 def reviewer_node(state: dict) -> dict:
     original_query = state.get("original_query") or state.get("query", "")
     draft = state.get("draft", "").strip()
+    retrieved_context = state.get("retrieved_context", "").strip()
 
     if not draft:
         return {"review": "REVISE: The generated answer is empty."}
@@ -61,7 +68,12 @@ def reviewer_node(state: dict) -> dict:
                 "content": (
                     f"Original user query:\\n{original_query}\\n\\n"
                     f"Generated answer to review:\\n{draft}\\n\\n"
-                    "Review this answer using the required format."
+                    + (
+                        f"Retrieved source context:\\n{retrieved_context}\\n\\n"
+                        if retrieved_context
+                        else ""
+                    )
+                    + "Review this answer using the required format."
                 ),
             },
         ],
