@@ -6,3 +6,7 @@ __pycache__/
 .pytest_cache/
 *.py[cod]
 .DS_Store
+
+# Local vector store and run artifacts (regenerate with `python3 -m app.rag.ingestion`)
+data/chroma_db/
+evaluation_results.json

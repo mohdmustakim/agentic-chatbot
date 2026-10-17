@@ -6,6 +6,7 @@ class ChatState(TypedDict):
     query: str
     original_query: str
     intent: str
+    routing_method: str
     draft: str
     review: str
     answer: str
